@@ -8,7 +8,19 @@ call plug#end()
 """""""""""""
 "  Editing  "
 """""""""""""
+" https://vim-jp.org/vim-users-jp/2010/04/06/Hack-137.html
 set encoding=utf-8
+" タブ入力を複数の空白入力に置き換える
+set expandtab
+" このオプションが on のとき、行頭の連続した空白に限り、<Tab> は 'shiftwidth' 分だけ空白を挿入します。
+set smarttab
+" インデントを変更する際に何文字分ずらすかの設定です。
+set shiftwidth=2
+ "<Tab> や <BS> を入力した際にその文字数分空白を入力したり削除したりします。
+set softtabstop=2
+set autoindent
+set copyindent
+set preserveindent
 
 """"""""
 "  UI  "
