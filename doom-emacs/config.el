@@ -34,6 +34,15 @@
   :custom-face
   (vhl/default-face ((nil (:foreground "#FF3333" :background "#FFCDCD")))))
 
+(use-package highlight-indent-guides
+  :diminish
+  :hook
+  ((prog-mode yaml-mode) . highlight-indent-guides-mode)
+  :custom
+  (highlight-indent-guides-auto-enabled t)
+  (highlight-indent-guides-responsive t)
+  (highlight-indent-guides-method 'character)) ; column
+
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
@@ -82,7 +91,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (volatile-highlights git-gutter beacon))))
+ '(package-selected-packages
+   (quote
+    (highlight-indent-guides volatile-highlights git-gutter beacon))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -90,4 +101,5 @@
  ;; If there is more than one, they won't work right.
  '(git-gutter:added ((t (:background "#50fa7b"))))
  '(git-gutter:deleted ((t (:background "#ff79c6"))))
- '(git-gutter:modified ((t (:background "#f1fa8c")))))
+ '(git-gutter:modified ((t (:background "#f1fa8c"))))
+ '(vhl/default-face ((nil (:foreground "#FF3333" :background "#FFCDCD")))))
