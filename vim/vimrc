@@ -1,0 +1,20 @@
+""""""""""""""""""""
+"  Initialization  "
+""""""""""""""""""""
+call plug#begin('~/.vim/plugged')
+Plug 'tomasr/molokai'
+call plug#end()
+
+"""""""""""""
+"  Editing  "
+"""""""""""""
+set encoding=utf-8
+
+""""""""
+"  UI  "
+""""""""
+set number
+set title
+set mouse=a
+set lazyredraw
+colorscheme molokai 
