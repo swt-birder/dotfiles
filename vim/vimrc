@@ -209,6 +209,7 @@ nnoremap <silent> [fugitive]a :Gwrite<CR>
 nnoremap <silent> [fugitive]c :Gcommit-v<CR>
 nnoremap <silent> [fugitive]d :Gdiff<CR>
 nnoremap <silent> [fugitive]m :Gmerge<CR>
+nnoremap <silent> [fugitive]p :Gpush<CR>
 " modifiable' がオフなので，変更できませんで使えない
 nnoremap <silent> [fugitive]b :Gblame<CR>
 
