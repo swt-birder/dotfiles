@@ -5,8 +5,10 @@
 set nocompatible
 
 call plug#begin('~/.vim/plugged')
-  Plug 'tomasr/molokai'
+  " completion and linting
   Plug 'Valloric/YouCompleteMe'
+  " colorschemes
+  Plug 'tomasr/molokai'
 call plug#end()
 
 """""""""""""
@@ -92,6 +94,11 @@ inoremap <C-b> <Left>
 inoremap <C-f> <Right>
 "jキーを二度押しでESCキー
 inoremap <silent> jj <Esc>
+" 行が折り返し表示されていた場合、行単位ではなく表示行単位でカーソルを移動する
+nnoremap j gj
+nnoremap k gk
+nnoremap <down> gj
+nnoremap <up> gk
 
 """"""""""
 "  Misc  "
