@@ -17,12 +17,14 @@ call plug#begin('~/.vim/plugged')
   Plug 'w0rp/ale'
   " colorschemes
   Plug 'tomasr/molokai'
+  Plug 'junegunn/fzf', {'dir': '~/.local/opt/fzf', 'do': '~/.local/opt/fzf/install'}
+  Plug 'junegunn/fzf.vim'
   " utilities
   Plug 'Yggdroot/indentLine'
   Plug 'bronson/vim-trailing-whitespace'
   Plug 'airblade/vim-gitgutter'
-  Plug 'itchyny/lightline.vim'
   Plug 'tpope/vim-fugitive'
+  Plug 'itchyny/lightline.vim'
 call plug#end()
 
 let s:plug = {
