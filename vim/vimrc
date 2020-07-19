@@ -1,20 +1,33 @@
-""""""""""""""""""""
-"  Initialization  "
-""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"             Initialization                    "
+"""""""""""""""""""""""""""""""""""""""""""""""""
 " vi 互換モードで動作させない
 set nocompatible
 
+" vim-plugがなければ自動インストール
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 call plug#begin('~/.vim/plugged')
+
   " completion and linting
   Plug 'Valloric/YouCompleteMe'
   Plug 'w0rp/ale'
   " colorschemes
   Plug 'tomasr/molokai'
+  " utilities
+  Plug 'Yggdroot/indentLine'
+  Plug 'bronson/vim-trailing-whitespace'
+  Plug 'airblade/vim-gitgutter'
+
 call plug#end()
 
-"""""""""""""
-"  Editing  "
-"""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"             Editing                           "
+"""""""""""""""""""""""""""""""""""""""""""""""""
 set encoding=utf-8
 " タブをスペースに変換する
 set expandtab
@@ -32,10 +45,13 @@ set preserveindent
 set backspace=indent,eol,start
 " yank したテキストをクリップボードに格納する
 set clipboard=unnamed,autoselect
+"ファイルを開いたときにタブ文字があったらスペースに変換
+autocmd BufNewFile,BufRead * set expandtab
+autocmd BufNewFile,BufRead * retab
 
-""""""""
-"  UI  "
-""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"             UI                                "
+"""""""""""""""""""""""""""""""""""""""""""""""""
 set number
 set title
 set mouse=a
@@ -57,9 +73,9 @@ set display=lastline
 " ファイル名等の情報を表示するステータスバーを追加
 set laststatus=2
 
-""""""""""""
-"  Search  "
-""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"             Search                            "
+"""""""""""""""""""""""""""""""""""""""""""""""""
 " 検索語句のハイライト
 set hlsearch
 " 検索時に英大小文字の区別を無視する
@@ -71,9 +87,9 @@ set wrapscan
 " インクリメンタルサーチしない
 set incsearch
 
-"""""""""""""""""
-"  Keybindings  "
-"""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"             Keybindings                       "
+"""""""""""""""""""""""""""""""""""""""""""""""""
 "  Leaderキーをspaceにする
 let mapleader="\<Space>"
 "  Y を、行末までのヤンクにする
@@ -103,12 +119,12 @@ nnoremap k gk
 nnoremap <down> gj
 nnoremap <up> gk
 
-""""""""""
-"  Misc  "
-""""""""""
-"-------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"             Misc                              "
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"---------------------------------------
 " ale
-"-------------------
+"---------------------------------------
 " flake8をLinterとして登録
 let g:ale_linters = {
     \ 'python': ['flake8'],
@@ -132,9 +148,9 @@ let g:ale_python_black_options = '-m black'
 nmap <silent> <Leader>x <Plug>(ale_fix)
 " ファイル保存時に自動的にFixするオプションもあるのでお好みで
 let g:ale_fix_on_save = 1
-"-------------------
-" YouCompleMe
-"-------------------
+"---------------------------------------
+" YouCompleteMe
+"---------------------------------------
 let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/.ycm_extra_conf.py'
 " YouCompleteMe を自動的に起動
 let g:ycm_auto_trigger = 1
@@ -146,9 +162,15 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 " https://github.com/ycm-core/YouCompleteMe/issues/232
 let g:ycm_key_list_stop_completion = ['<C-y>', '<CR>']
 
-"""""""""""""
-"  General  "
-"""""""""""""
+"----------------------------------------------------------
+" vim-gitgutter
+"----------------------------------------------------------
+" タイピング停止から反映までの時間
+set updatetime=250
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"             General                           "
+"""""""""""""""""""""""""""""""""""""""""""""""""
 " color
 colorscheme molokai
 "履歴を10000件保存
