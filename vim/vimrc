@@ -197,9 +197,23 @@ let g:lightline = {
       \   'gitbranch': 'FugitiveHead'
       \ },
       \ }
+"---------------------------------------
+" fugitive.vim
+"---------------------------------------
+nnoremap [fugitive]  <Nop>
+nmap <space>g [fugitive]
+nnoremap <silent> [fugitive]s :Gstatus<CR><C-w>T
+nnoremap <silent> [fugitive]a :Gwrite<CR>
+nnoremap <silent> [fugitive]c :Gcommit-v<CR>
+nnoremap <silent> [fugitive]b :Gblame<CR>
+nnoremap <silent> [fugitive]d :Gdiff<CR>
+nnoremap <silent> [fugitive]m :Gmerge<CR>
+
 """""""""""""""""""""""""""""""""""""""""""""""""
 "             General                           "
 """""""""""""""""""""""""""""""""""""""""""""""""
 "履歴を10000件保存
 set history=10000
+" コマンドラインモードでTABキーによるファイル名補完を有効にする
+set wildmenu
 
