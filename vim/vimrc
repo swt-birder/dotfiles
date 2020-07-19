@@ -12,7 +12,6 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
-
   " completion and linting
   Plug 'Valloric/YouCompleteMe'
   Plug 'w0rp/ale'
@@ -22,8 +21,22 @@ call plug#begin('~/.vim/plugged')
   Plug 'Yggdroot/indentLine'
   Plug 'bronson/vim-trailing-whitespace'
   Plug 'airblade/vim-gitgutter'
-
+  Plug 'itchyny/lightline.vim'
+  Plug 'tpope/vim-fugitive'
 call plug#end()
+
+let s:plug = {
+      \ "plugs": get(g:, 'plugs', {})
+      \ }
+
+function! s:plug.is_installed(name)
+  return has_key(self.plugs, a:name) ? isdirectory(self.plugs[a:name].dir) : 0
+endfunction
+
+if s:plug.is_installed("molokai")
+  " color
+  colorscheme molokai
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""
 "             Editing                           "
@@ -44,7 +57,7 @@ set preserveindent
 " 挿入モードでバックスペースで削除できるようにする
 set backspace=indent,eol,start
 " yank したテキストをクリップボードに格納する
-set clipboard=unnamed,autoselect
+"set clipboard=unnamed,autoselect
 "ファイルを開いたときにタブ文字があったらスペースに変換
 autocmd BufNewFile,BufRead * set expandtab
 autocmd BufNewFile,BufRead * retab
@@ -162,17 +175,31 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 " https://github.com/ycm-core/YouCompleteMe/issues/232
 let g:ycm_key_list_stop_completion = ['<C-y>', '<CR>']
 
-"----------------------------------------------------------
+"---------------------------------------
 " vim-gitgutter
-"----------------------------------------------------------
+"---------------------------------------
 " タイピング停止から反映までの時間
 set updatetime=250
+" 差分にジャンプ
+nmap [n <Plug>(GitGutterNextHunk)
+nmap ]n <Plug>(GitGutterPrevHunk)
 
+"---------------------------------------
+" lightline
+"---------------------------------------
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead'
+      \ },
+      \ }
 """""""""""""""""""""""""""""""""""""""""""""""""
 "             General                           "
 """""""""""""""""""""""""""""""""""""""""""""""""
-" color
-colorscheme molokai
 "履歴を10000件保存
 set history=10000
 
