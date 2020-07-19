@@ -6,6 +6,7 @@ set nocompatible
 
 call plug#begin('~/.vim/plugged')
   Plug 'tomasr/molokai'
+  Plug 'Valloric/YouCompleteMe'
 call plug#end()
 
 """""""""""""
@@ -32,7 +33,6 @@ set clipboard=unnamed,autoselect
 """"""""
 "  UI  "
 """"""""
-colorscheme molokai
 set number
 set title
 set mouse=a
@@ -92,4 +92,26 @@ inoremap <C-b> <Left>
 inoremap <C-f> <Right>
 "jキーを二度押しでESCキー
 inoremap <silent> jj <Esc>
-inoremap <silent> っj <ESC>
+
+""""""""""
+"  Misc  "
+""""""""""
+" YouCompleteMe "
+let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/.ycm_extra_conf.py'
+" YouCompleteMe を自動的に起動
+let g:ycm_auto_trigger = 1
+" 識別子補完機能が起動するのに、ユーザが入力していなければならない文字数の最小
+let g:ycm_min_num_of_chars_for_completion = 1
+" vim のインサートモードを抜けた後にプレビューウィンドウを自動的に閉じるようになります。
+let g:ycm_autoclose_preview_window_after_insertion = 1
+" 補完候補をEnterで選択したときに改行されないようにする
+" https://github.com/ycm-core/YouCompleteMe/issues/232
+let g:ycm_key_list_stop_completion = ['<C-y>', '<CR>']
+
+"""""""""""""
+"  General  "
+"""""""""""""
+" color
+colorscheme molokai
+"履歴を10000件保存
+set history=10000
