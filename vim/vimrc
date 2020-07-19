@@ -1,32 +1,95 @@
 """"""""""""""""""""
 "  Initialization  "
 """"""""""""""""""""
+" vi 互換モードで動作させない
+set nocompatible
+
 call plug#begin('~/.vim/plugged')
-Plug 'tomasr/molokai'
+  Plug 'tomasr/molokai'
 call plug#end()
 
 """""""""""""
 "  Editing  "
 """""""""""""
-" https://vim-jp.org/vim-users-jp/2010/04/06/Hack-137.html
 set encoding=utf-8
-" タブ入力を複数の空白入力に置き換える
+" タブをスペースに変換する
 set expandtab
 " このオプションが on のとき、行頭の連続した空白に限り、<Tab> は 'shiftwidth' 分だけ空白を挿入します。
 set smarttab
-" インデントを変更する際に何文字分ずらすかの設定です。
+" 自動で挿入されるインデントのスペース幅
 set shiftwidth=2
  "<Tab> や <BS> を入力した際にその文字数分空白を入力したり削除したりします。
 set softtabstop=2
+" https://vim-jp.org/vim-users-jp/2010/04/06/Hack-137.html
 set autoindent
 set copyindent
 set preserveindent
+" 挿入モードでバックスペースで削除できるようにする
+set backspace=indent,eol,start
+" yank したテキストをクリップボードに格納する
+set clipboard=unnamed,autoselect
 
 """"""""
 "  UI  "
 """"""""
+colorscheme molokai
 set number
 set title
 set mouse=a
 set lazyredraw
-colorscheme molokai 
+" 入力中のコマンドを表示する
+set showcmd
+" カーソルの位置表示を行う
+set ruler
+" 括弧の対応関係を一瞬表示する
+set showmatch
+" 括弧の対応関係表示を0.1秒に変更(デフォルトは0.5秒)
+set matchtime=1
+" 不可視文字を表示する
+set list
+" 表示する形式を変更
+set listchars=tab:>\ ,trail:-,nbsp:+
+" 一行の文字数が多くても@で省略されずにきちんと描画される
+set display=lastline
+" ファイル名等の情報を表示するステータスバーを追加
+set laststatus=2
+
+""""""""""""
+"  Search  "
+""""""""""""
+" 検索語句のハイライト
+set hlsearch
+" 検索時に英大小文字の区別を無視する
+set ignorecase
+" 検索時に全て英小文字で入力した場合のみ英大小文字区別を無視する
+set smartcase
+" 検索した際に最後の語句の次に最初の語句にループするようにする
+set wrapscan
+" インクリメンタルサーチしない
+set incsearch
+
+"""""""""""""""""
+"  Keybindings  "
+"""""""""""""""""
+"  Y を、行末までのヤンクにする
+nnoremap Y y$
+" 数字のインクリメント/デクリメント
+nnoremap + <C-a>
+nnoremap - <C-x>
+"方向キーの無効化
+noremap <Up> <Nop>
+noremap <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
+inoremap <Up> <Nop>
+inoremap <Down> <Nop>
+inoremap <Left> <Nop>
+inoremap <Right> <Nop>
+" emacs key binding
+inoremap <C-p> <Up>
+inoremap <C-n> <Down>
+inoremap <C-b> <Left>
+inoremap <C-f> <Right>
+"jキーを二度押しでESCキー
+inoremap <silent> jj <Esc>
+inoremap <silent> っj <ESC>
