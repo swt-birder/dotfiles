@@ -7,6 +7,7 @@ set nocompatible
 call plug#begin('~/.vim/plugged')
   " completion and linting
   Plug 'Valloric/YouCompleteMe'
+  Plug 'w0rp/ale'
   " colorschemes
   Plug 'tomasr/molokai'
 call plug#end()
@@ -73,6 +74,8 @@ set incsearch
 """""""""""""""""
 "  Keybindings  "
 """""""""""""""""
+"  Leaderキーをspaceにする
+let mapleader="\<Space>"
 "  Y を、行末までのヤンクにする
 nnoremap Y y$
 " 数字のインクリメント/デクリメント
@@ -103,7 +106,35 @@ nnoremap <up> gk
 """"""""""
 "  Misc  "
 """"""""""
-" YouCompleteMe "
+"-------------------
+" ale
+"-------------------
+" flake8をLinterとして登録
+let g:ale_linters = {
+    \ 'python': ['flake8'],
+    \ }
+
+" 各ツールをFixerとして登録
+let g:ale_fixers = {
+    \ 'python': ['autopep8', 'black', 'isort'],
+    \ }
+let g:python3_host_prog = '/usr/local/bin/python3'
+" 各ツールの実行オプションを変更してPythonパスを固定
+let g:ale_python_flake8_executable = g:python3_host_prog
+let g:ale_python_flake8_options = '-m flake8'
+let g:ale_python_autopep8_executable = g:python3_host_prog
+let g:ale_python_autopep8_options = '-m autopep8'
+let g:ale_python_isort_executable = g:python3_host_prog
+let g:ale_python_isort_options = '-m isort'
+let g:ale_python_black_executable = g:python3_host_prog
+let g:ale_python_black_options = '-m black'
+" ついでにFixを実行するマッピングしとく
+nmap <silent> <Leader>x <Plug>(ale_fix)
+" ファイル保存時に自動的にFixするオプションもあるのでお好みで
+let g:ale_fix_on_save = 1
+"-------------------
+" YouCompleMe
+"-------------------
 let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/.ycm_extra_conf.py'
 " YouCompleteMe を自動的に起動
 let g:ycm_auto_trigger = 1
@@ -122,3 +153,4 @@ let g:ycm_key_list_stop_completion = ['<C-y>', '<CR>']
 colorscheme molokai
 "履歴を10000件保存
 set history=10000
+
