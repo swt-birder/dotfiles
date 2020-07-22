@@ -1,6 +1,32 @@
 #""""""""""""""""""""""""""""""""""""""""""""""""
+#             Plugin                            "
+#""""""""""""""""""""""""""""""""""""""""""""""""
+#
+# zplugが無ければインストール
+if [[ ! -d ~/.zplug ]];then
+  git clone https://github.com/zplug/zplug ~/.zplug
+fi
+# zplugを有効化する
+source ~/.zplug/init.zsh
+# プラグインList
+# zplug "ユーザー名/リポジトリ名", タグ
+zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zsh-autosuggestions"
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
+# インストールしていないプラグインをインストール
+if ! zplug check --verbose; then
+  printf "Install? [y/N]: "
+  if read -q; then
+      echo; zplug install
+  fi
+fi
+# コマンドをリンクして、PATH に追加し、プラグインは読み込む
+zplug load --verbose
+
+#""""""""""""""""""""""""""""""""""""""""""""""""
 #             alias                             "
 #""""""""""""""""""""""""""""""""""""""""""""""""
+#
 alias gs='git status'
 alias ga='git add .'
 alias gct='git commit -m "update: "`date '+%Y-%m-%d-%H:%M:%S'`'
@@ -19,6 +45,7 @@ alias diffy='diff -y --suppress-common-lines'
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #             Completion                        "
 #""""""""""""""""""""""""""""""""""""""""""""""""
+#
 # 自動補完を有効にする
 autoload -Uz compinit ; compinit
 # 単語の入力途中でもTab補完を有効化
@@ -48,6 +75,7 @@ zstyle ':completion:*:manuals' separate-sections true
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #             fzf                               "
 #""""""""""""""""""""""""""""""""""""""""""""""""
+#
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 #export FZF_CTRL_R_OPTS='--prompt="History > "'
 export FZF_DEFAULT_OPTS='--height 70% --reverse --select-1 --exit-0 --multi --border'
@@ -59,6 +87,7 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #             Prompt                            "
 #""""""""""""""""""""""""""""""""""""""""""""""""
+#
 # %M    ホスト名
 # %m    ホスト名
 # %d    カレントディレクトリ(フルパス)
@@ -88,6 +117,7 @@ PROMPT='[%n]${vcs_info_msg_0_}
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #             History                           "
 #""""""""""""""""""""""""""""""""""""""""""""""""
+#
 # 基本設定
 HISTFILE=$HOME/.zsh-history
 HISTSIZE=100000
