@@ -1,5 +1,6 @@
 #!/bin/bash
 
+ln -sf ~/dotfiles/gitconfig ~/.gitconfig
 ln -sf ~/dotfiles/zshrc ~/.zshrc
 ln -sf ~/dotfiles/vim/vimrc ~/.vimrc
 ln -sf ~/dotfiles/vim/autoload ~/.vim
