@@ -2,26 +2,25 @@
 #             Plugin                            "
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #
-# zplugが無ければインストール
-if [[ ! -d ~/.zplug ]];then
-  git clone https://github.com/zplug/zplug ~/.zplug
+### Added by Zinit's installer
+if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
+    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.zinit" && command chmod g-rwX "$HOME/.zinit"
+    command git clone https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
+        print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
+        print -P "%F{160}▓▒░ The clone has failed.%f%b"
 fi
-# zplugを有効化する
-source ~/.zplug/init.zsh
-# プラグインList
-# zplug "ユーザー名/リポジトリ名", タグ
-zplug "zsh-users/zsh-completions"
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
-# インストールしていないプラグインをインストール
-if ! zplug check --verbose; then
-  printf "Install? [y/N]: "
-  if read -q; then
-      echo; zplug install
-  fi
-fi
-# コマンドをリンクして、PATH に追加し、プラグインは読み込む
-zplug load --verbose
+
+source "$HOME/.zinit/bin/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# 補完
+zinit light zsh-users/zsh-autosuggestions
+# シンタックスハイライト
+zinit light zdharma/fast-syntax-highlighting
+# Ctrl+r でコマンド履歴を検索
+zinit light zdharma/history-search-multi-word
 
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #             alias                             "
@@ -34,7 +33,7 @@ alias gcm='git checkout master'
 alias gph='git push origin HEAD'
 alias gpl='git pull'
 alias zrc='source ~/.zshrc'
-alias vz='vim  ~/.zshrc'
+alias vz='vim  ~/dotfiles/zshrc'
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -r'
