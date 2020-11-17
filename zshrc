@@ -29,6 +29,7 @@ zinit light zdharma/history-search-multi-word
 alias gs='git status'
 alias ga='git add .'
 alias gct='git commit -m "update: "`date '+%Y-%m-%d-%H:%M:%S'`'
+alias gcv='git commit -v'
 alias gcm='git checkout master'
 alias gph='git push origin HEAD'
 alias gpl='git pull'
@@ -57,6 +58,7 @@ zstyle ':completion:*' menu select
 setopt list_packed
 # 補完候補にファイルの種類も表示する
 setopt list_types
+export CLICOLOR=1
 # 色の設定
 export LSCOLORS=Exfxcxdxbxegedabagacad
 # 補完時の色設定
@@ -70,6 +72,14 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 # manの補完をセクション番号別に表示させる
 zstyle ':completion:*:manuals' separate-sections true
+
+#export LSCOLORS=exfxcxdxbxegedabagacad
+#export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
+
+alias ls="ls -GF"
+alias gls="gls --color"
+
+zstyle ':completion:*' list-colors 'di=34' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34'
 
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #             fzf                               "
@@ -113,6 +123,7 @@ PROMPT='[%n]
 %{${fg[yellow]}%}%~%{${reset_color}%}
 %(?.%B%F{green}.%B%F{blue})%(?!(๑˃̵ᴗ˂̵)ﻭ < !(;^ω^%) < )%f%b'
 RPROMPT='${vcs_info_msg_0_}'
+
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #             History                           "
 #""""""""""""""""""""""""""""""""""""""""""""""""
@@ -136,3 +147,4 @@ setopt inc_append_history
 # ヒストリを呼び出してから実行する間に一旦編集できる状態になる
 setopt hist_verify
 
+export PATH="$PATH:$HOME/bin"
