@@ -1,7 +1,3 @@
-[include]
-        path = ~/.gitconfig.local
-        # This next lines include Netlify's Git Credential Helper configuration in your Git configuration.
-        # path = ~/.netlify/helper/git-config
 [pager]
         diff = diff-so-fancy | less --tabs=4 -RFX --pattern='^(added|deleted|modified): '
 [color "diff-highlight"]
@@ -9,3 +5,6 @@
         oldHighlight = red bold 52
         newNormal = green bold
         newHighlight = green bold 22
+[user]
+        name = nana
+	email = haysato.personal@gmail.com

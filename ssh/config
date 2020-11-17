@@ -1,0 +1,16 @@
+
+Host github.com
+  HostName github.com
+  IdentityFile ~/.ssh/private.2020-04-29
+  User git
+Host dave
+  Hostname 126.74.133.196
+  User dave
+  Port 52000
+  IdentityFile ~/.ssh/id_rsa.2020-11-14
+Host alice
+  Hostname 172.16.10.110
+  User alice
+  Port 52100
+  IdentityFile ~/.ssh/alice.2020-11-14
+  ProxyCommand ssh dave nc %h %p

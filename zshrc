@@ -1,4 +1,13 @@
 #""""""""""""""""""""""""""""""""""""""""""""""""
+#             General                           "
+#""""""""""""""""""""""""""""""""""""""""""""""""
+# pyenvに~/.pyenvではなく、/usr/loca/var/pyenvを使うようにお願いする
+export PYENV_ROOT=/usr/local/var/pyenv
+# pyenvさんに自動補完機能を提供してもらう
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+#""""""""""""""""""""""""""""""""""""""""""""""""
 #             Plugin                            "
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #
@@ -10,18 +19,15 @@ if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
         print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
         print -P "%F{160}▓▒░ The clone has failed.%f%b"
 fi
-
 source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
-
 # 補完
 zinit light zsh-users/zsh-autosuggestions
 # シンタックスハイライト
 zinit light zdharma/fast-syntax-highlighting
 # Ctrl+r でコマンド履歴を検索
 zinit light zdharma/history-search-multi-word
-
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #             alias                             "
 #""""""""""""""""""""""""""""""""""""""""""""""""
@@ -41,7 +47,6 @@ alias cp='cp -r'
 alias vi='vim'
 alias mkdir='mkdir -pv'
 alias diffy='diff -y --suppress-common-lines'
-
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #             Completion                        "
 #""""""""""""""""""""""""""""""""""""""""""""""""
@@ -72,15 +77,11 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 # manの補完をセクション番号別に表示させる
 zstyle ':completion:*:manuals' separate-sections true
-
 #export LSCOLORS=exfxcxdxbxegedabagacad
 #export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
-
 alias ls="ls -GF"
 alias gls="gls --color"
-
 zstyle ':completion:*' list-colors 'di=34' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34'
-
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #             fzf                               "
 #""""""""""""""""""""""""""""""""""""""""""""""""
@@ -92,7 +93,6 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 --color fg:252,bg:233,hl:#32cd32,fg+:#ee82ee,bg+:235,hl+:#00ff00
 --color info:144,prompt:161,spinner:135,pointer:135,marker:118
 '
-
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #             Prompt                            "
 #""""""""""""""""""""""""""""""""""""""""""""""""
@@ -116,14 +116,19 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 # vcs_info
 autoload -Uz vcs_info
 setopt prompt_subst
-zstyle ':vcs_info:*' formats '[%F{green}%b%f]'
-zstyle ':vcs_info:*' actionformats '[%F{green}%b%f(%F{red}%a%f)]'
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' stagedstr "%F{yellow}!"
+zstyle ':vcs_info:git:*' unstagedstr "%F{red}+"
+#zstyle ':vcs_info:*' formats '[%F{green}%b%f]'
+#zstyle ':vcs_info:*' actionformats '[%F{green}%b%f(%F{red}%a%f)]'
+zstyle ':vcs_info:*' formats "%F{green}%c%u[%b]%f"
+zstyle ':vcs_info:*' actionformats '[%b|%a]'
 precmd() { vcs_info }
 PROMPT='[%n]
 %{${fg[yellow]}%}%~%{${reset_color}%}
 %(?.%B%F{green}.%B%F{blue})%(?!(๑˃̵ᴗ˂̵)ﻭ < !(;^ω^%) < )%f%b'
-RPROMPT='${vcs_info_msg_0_}'
-
+RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
+#RPROMPT='${vcs_info_msg_0_}'
 #""""""""""""""""""""""""""""""""""""""""""""""""
 #             History                           "
 #""""""""""""""""""""""""""""""""""""""""""""""""
@@ -146,5 +151,24 @@ setopt hist_reduce_blanks
 setopt inc_append_history
 # ヒストリを呼び出してから実行する間に一旦編集できる状態になる
 setopt hist_verify
-
+export PATH=$PATH:/Users/haysato/.emacs.d/bin
 export PATH="$PATH:$HOME/bin"
+######################
+#  Terminal Support  #
+######################
+__term_support() {
+  # set title
+  if [[ -n "$SSH_CONNECTION" ]]; then
+    print -Pn "\e]0;%m: %1~\a"
+  else
+    print -Pn "\e]0;%1~\a"
+  fi
+}
+case "$TERM" in
+  xterm*|screen*|tmux*)
+    add-zsh-hook precmd __term_support
+    ;|
+  eterm*|xterm-kitty)
+    zstyle ':iterm2:osc' enable false
+    ;;
+esac
