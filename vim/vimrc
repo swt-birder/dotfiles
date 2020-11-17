@@ -3,43 +3,53 @@
 """""""""""""""""""""""""""""""""""""""""""""""""
 " vi 互換モードで動作させない
 set nocompatible
-
 " vim-plugがなければ自動インストール
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
-
 call plug#begin('~/.vim/plugged')
   " completion and linting
-  Plug 'Valloric/YouCompleteMe'
   Plug 'w0rp/ale'
   " colorschemes
   Plug 'tomasr/molokai'
   Plug 'junegunn/fzf', {'dir': '~/.local/opt/fzf', 'do': '~/.local/opt/fzf/install'}
   Plug 'junegunn/fzf.vim'
+  " filetypes
+  Plug 'rust-lang/rust.vim', {'for': 'rust'}
   " utilities
   Plug 'Yggdroot/indentLine'
   Plug 'bronson/vim-trailing-whitespace'
   Plug 'airblade/vim-gitgutter'
   Plug 'tpope/vim-fugitive'
   Plug 'itchyny/lightline.vim'
+  " Programming
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
-
 let s:plug = {
       \ "plugs": get(g:, 'plugs', {})
       \ }
-
 function! s:plug.is_installed(name)
   return has_key(self.plugs, a:name) ? isdirectory(self.plugs[a:name].dir) : 0
 endfunction
-
 if s:plug.is_installed("molokai")
   " color
   colorscheme molokai
 endif
-
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"             General                           "
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"履歴を10000件保存
+set history=10000
+" paste mode
+" https://qiita.com/ryoff/items/ad34584e41425362453e
+" enable bracketed paste mode
+if !has('nvim') && has('patch-8.0.0238') && $TERM =~? 'screen'
+  let &t_BE = "\<Esc>[?2004h"
+  let &t_BD = "\<Esc>[?2004l"
+  exec "set t_PS=\<ESC>[200~ | set t_PE=\<ESC>[201~"
+endif
 """""""""""""""""""""""""""""""""""""""""""""""""
 "             Editing                           "
 """""""""""""""""""""""""""""""""""""""""""""""""
@@ -63,7 +73,6 @@ set backspace=indent,eol,start
 "ファイルを開いたときにタブ文字があったらスペースに変換
 autocmd BufNewFile,BufRead * set expandtab
 autocmd BufNewFile,BufRead * retab
-
 """""""""""""""""""""""""""""""""""""""""""""""""
 "             UI                                "
 """""""""""""""""""""""""""""""""""""""""""""""""
@@ -87,7 +96,6 @@ set listchars=tab:>\ ,trail:-,nbsp:+
 set display=lastline
 " ファイル名等の情報を表示するステータスバーを追加
 set laststatus=2
-
 """""""""""""""""""""""""""""""""""""""""""""""""
 "             Search                            "
 """""""""""""""""""""""""""""""""""""""""""""""""
@@ -101,7 +109,6 @@ set smartcase
 set wrapscan
 " インクリメンタルサーチしない
 set incsearch
-
 """""""""""""""""""""""""""""""""""""""""""""""""
 "             Keybindings                       "
 """""""""""""""""""""""""""""""""""""""""""""""""
@@ -133,7 +140,6 @@ nnoremap j gj
 nnoremap k gk
 nnoremap <down> gj
 nnoremap <up> gk
-
 """""""""""""""""""""""""""""""""""""""""""""""""
 "             Misc                              "
 """""""""""""""""""""""""""""""""""""""""""""""""
@@ -142,15 +148,17 @@ nnoremap <up> gk
 "---------------------------------------
 " flake8をLinterとして登録
 let g:ale_linters = {
-    \ 'python': ['flake8'],
-    \ }
-
-" 各ツールをFixerとして登録
+   \ 'python': ['flake8'],
+   \ }
+"" 各ツールをFixerとして登録
 let g:ale_fixers = {
     \ 'python': ['autopep8', 'black', 'isort'],
+    \ 'ruby': ['rubocop'],
+    \ 'rust': ['rustfmt'],
+    \ 'php': ['php_cs_fixer'],
     \ }
 let g:python3_host_prog = '/usr/local/bin/python3'
-" 各ツールの実行オプションを変更してPythonパスを固定
+"" 各ツールの実行オプションを変更してPythonパスを固定
 let g:ale_python_flake8_executable = g:python3_host_prog
 let g:ale_python_flake8_options = '-m flake8'
 let g:ale_python_autopep8_executable = g:python3_host_prog
@@ -159,24 +167,11 @@ let g:ale_python_isort_executable = g:python3_host_prog
 let g:ale_python_isort_options = '-m isort'
 let g:ale_python_black_executable = g:python3_host_prog
 let g:ale_python_black_options = '-m black'
-" ついでにFixを実行するマッピングしとく
-nmap <silent> <Leader>x <Plug>(ale_fix)
-" ファイル保存時に自動的にFixするオプションもあるのでお好みで
+let g:ale_rustfmt_executable = 'rustfmt'
+"" ついでにFixを実行するマッピングしとく
+"nmap <silent> <Leader>x <Plug>(ale_fix)
+"" ファイル保存時に自動的にFixするオプションもあるのでお好みで
 let g:ale_fix_on_save = 1
-"---------------------------------------
-" YouCompleteMe
-"---------------------------------------
-let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/.ycm_extra_conf.py'
-" YouCompleteMe を自動的に起動
-let g:ycm_auto_trigger = 1
-" 識別子補完機能が起動するのに、ユーザが入力していなければならない文字数の最小
-let g:ycm_min_num_of_chars_for_completion = 1
-" vim のインサートモードを抜けた後にプレビューウィンドウを自動的に閉じるようになります。
-let g:ycm_autoclose_preview_window_after_insertion = 1
-" 補完候補をEnterで選択したときに改行されないようにする
-" https://github.com/ycm-core/YouCompleteMe/issues/232
-let g:ycm_key_list_stop_completion = ['<C-y>', '<CR>']
-
 "---------------------------------------
 " vim-gitgutter
 "---------------------------------------
@@ -185,7 +180,6 @@ set updatetime=250
 " 差分にジャンプ
 nmap [n <Plug>(GitGutterNextHunk)
 nmap ]n <Plug>(GitGutterPrevHunk)
-
 "---------------------------------------
 " lightline
 "---------------------------------------
@@ -193,10 +187,12 @@ let g:lightline = {
       \ 'colorscheme': 'wombat',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+      \   'right':[ ['coc'] ]
       \ },
       \ 'component_function': {
-      \   'gitbranch': 'FugitiveHead'
+      \   'gitbranch': 'FugitiveHead',
+      \   'coc': 'coc#status'
       \ },
       \ }
 "---------------------------------------
@@ -206,18 +202,34 @@ nnoremap [fugitive]  <Nop>
 nmap <space>g [fugitive]
 nnoremap <silent> [fugitive]g :Gstatus<CR><C-w>T
 nnoremap <silent> [fugitive]a :Gwrite<CR>
-nnoremap <silent> [fugitive]c :Gcommit-v<CR>
+nnoremap <silent> [fugitive]c :Gcommit -v<CR>
 nnoremap <silent> [fugitive]d :Gdiff<CR>
 nnoremap <silent> [fugitive]m :Gmerge<CR>
 nnoremap <silent> [fugitive]p :Gpush<CR>
 " modifiable' がオフなので，変更できませんで使えない
 nnoremap <silent> [fugitive]b :Gblame<CR>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""
-"             General                           "
-"""""""""""""""""""""""""""""""""""""""""""""""""
-"履歴を10000件保存
-set history=10000
-" コマンドラインモードでTABキーによるファイル名補完を有効にする
-set wildmenu
-
+"---------------------------------------
+" coc.nvim
+"---------------------------------------
+nmap <silent> <Leader>gd <Plug>(coc-definition)
+nmap <silent> <Leader>gD <Plug>(coc-declaration)
+nmap <silent> <Leader>gt <Plug>(coc-type-definition)
+nmap <silent> <Leader>g] <Plug>(coc-implementation)
+nmap <silent> <Leader>* <Plug>(coc-references)
+nnoremap <silent> <Leader>K :call CocAction('doHover')<CR>
+nnoremap <silent> <Leader><Leader> :CocList commands<CR>
+" 補完候補の選択用
+" https://wonderwall.hatenablog.com/entry/2019/08/17/003000
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+"Diagnosticsの、左横のアイコンの色設定
+"highlight CocErrorSign ctermfg=15 ctermbg=196
+"highlight CocWarningSign ctermfg=0 ctermbg=172
